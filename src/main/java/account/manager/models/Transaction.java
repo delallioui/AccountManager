@@ -5,6 +5,14 @@ public class Transaction {
 	private String direction;
 	private String thirdPartyId;
 	
+	
+	
+	public Transaction(int amount, String direction, String thirdPartyId) {
+		super();
+		this.amount = amount;
+		this.direction = direction;
+		this.thirdPartyId = thirdPartyId;
+	}
 	public String getThirdPartyId() {
 		return thirdPartyId;
 	}

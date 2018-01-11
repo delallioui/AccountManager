@@ -9,55 +9,6 @@ public class Account {
 	private int balance;
 	private List<Transaction> transactionHistory = new ArrayList<>();
 	
-	public void withdraw(int amount){
-		if(amount > this.balance || amount < 0){
-			return;
-		}
-		
-		this.balance -= amount;
-	}
-	
-	public void deposit(int amount){
-		if(amount < 0){
-			return;
-		}
-		
-		this.balance += amount;
-	}
-	
-	public Account transferAmount(int amount, Account desitnationAccount){
-		if(desitnationAccount == null){
-			return null;
-		}
-		
-		if(amount < 0 || amount > this.getBalance()){
-			return desitnationAccount;
-		}
-		
-		this.withdraw(amount);
-		this.addTransactionHistory(amount, Directions.OUT.getCode(), desitnationAccount.getAccountId());
-		
-		desitnationAccount.deposit(amount);
-		desitnationAccount.addTransactionHistory(amount, Directions.IN.getCode(), this.accountId);
-		
-		return desitnationAccount;
-		
-	}
-	
-	private void addTransactionHistory(int amount, String direction, String thirdPartyId) {
-		Transaction transaction = new Transaction(); 
-		transaction.setAmount(amount);
-		transaction.setDirection(direction);
-		transaction.setThirdPartyId(thirdPartyId);
-		this.getTransactionHistory().add(transaction);
-	}
-	
-	public List<Transaction> filterTransactionHistory(String direction){
-		return this.getTransactionHistory().stream()
-				.filter(t -> t.getDirection().equals(direction))
-				.collect(Collectors.toList());
-	}
-	
 	public Account(int balance) {
 		super();
 		this.balance = balance;
@@ -81,5 +32,7 @@ public class Account {
 	public int getBalance() {
 		return balance;
 	}
-	
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
 }
