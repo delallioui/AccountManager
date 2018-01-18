@@ -1,7 +1,7 @@
 /**
  * 
  */
-package account.manager.models;
+package org.talan.account.manager.models;
 
 /**
  * @author Driss

@@ -5,4 +5,4 @@
  * @author driss.el-allioui
  *
  */
-package account.manager.services;
+package org.talan.account.manager.controllers;
