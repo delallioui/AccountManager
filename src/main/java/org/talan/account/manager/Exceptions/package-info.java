@@ -5,4 +5,4 @@
  * @author driss.el-allioui
  *
  */
-package account.manager.interfaces;
+package org.talan.account.manager.Exceptions;
