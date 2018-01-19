@@ -56,15 +56,13 @@ public class AccountServiceTest {
 
 	@Test
 	public void withdrawMustReturnValidBalance() throws Exception {
-		boolean result = accountService.withdraw(new OperationDto(accountId, 60F));
-		assertThat(result).isEqualTo(true);
+		accountService.withdraw(new OperationDto(accountId, 60F));
 		assertThat(accountService.findAccount(accountId).getBalance()).isEqualTo(40F);
 	}
 
 	@Test
 	public void depositMustReturnValidBalance() throws OperationException {
-		boolean result = accountService.deposit(new OperationDto(accountId, 60F));
-		assertThat(result).isEqualTo(true);
+		accountService.deposit(new OperationDto(accountId, 60F));
 		assertThat(accountService.findAccount(accountId).getBalance()).isEqualTo(160F);
 	}
 
@@ -84,16 +82,15 @@ public class AccountServiceTest {
 
 	@Test
 	public void transferAmountMustReturnValidBalances() throws Exception {
-		boolean result = accountService.transferAmount(new TransactionDto(accountId, 60F, accountId2));
+		accountService.transferAmount(new TransactionDto(accountId, 60F, accountId2));
 
-		assertThat(result).isEqualTo(true);
 		assertThat(accountService.findAccount(accountId).getBalance()).isEqualTo(40F);
 		assertThat(accountService.findAccount(accountId2).getBalance()).isEqualTo(160F);
 	}
 
 	@Test
 	public void transactionHistoryMustReturnValidRecords() throws Exception {
-		boolean result = accountService.transferAmount(new TransactionDto(accountId, 60F, accountId2));
+		accountService.transferAmount(new TransactionDto(accountId, 60F, accountId2));
 		
 		assertThat(accountService.findAccount(accountId).getTransactionHistory()).isNotNull();
 		assertThat(accountService.findAccount(accountId).getTransactionHistory().size()).isEqualTo(1);

@@ -3,76 +3,76 @@ package org.talan.account.manager.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.talan.account.manager.Exceptions.OperationException;
+import org.talan.account.manager.Exceptions.TransferException;
 import org.talan.account.manager.dto.OperationDto;
 import org.talan.account.manager.dto.TransactionDto;
 import org.talan.account.manager.dto.TransactionFilterDto;
 import org.talan.account.manager.models.Account;
 import org.talan.account.manager.models.Transaction;
 import org.talan.account.manager.service.AccountService;
-import org.talan.account.manager.utils.ResponseStat;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 
 @RestController
+@Api
 public class AccountController {
 	
 	@Autowired
 	private AccountService accountService;
 	
 	@PutMapping("/account")
-	public @ResponseBody ResponseStat createAccount(@RequestBody Account account) {
+	@ApiOperation(httpMethod = "PUT", value = "Resource to create an account")
+	public @ResponseBody void createAccount(@RequestBody Account account) {
 		accountService.createAccount(account);
-		return ResponseStat.SUCCESS;
 	}
 	
 	@GetMapping("/account/{accountId}")
-	public @ResponseBody Account getAccount(@RequestAttribute String accountId) {
-		return accountService.findAccount(accountId);
+	@ApiOperation(httpMethod = "GET", value = "Resource to get an account")
+	public @ResponseBody ResponseEntity<Account> getAccount(@PathVariable String accountId) {
+		Account account = accountService.findAccount(accountId);
+		return new ResponseEntity<Account>(account, HttpStatus.OK);
 	}
 
 	@PostMapping("/withdraw")
-	public @ResponseBody ResponseStat withdraw(@RequestBody OperationDto operationDto) {
-		try {
+	@ApiOperation(httpMethod = "POST", value = "Resource to perform the withdraw operation")
+	@ApiResponse(code = 500, message = "An error occured while performing the action")
+	public @ResponseBody void withdraw(@RequestBody OperationDto operationDto) throws OperationException {
 			accountService.withdraw(operationDto);
-			return ResponseStat.SUCCESS;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseStat.FAILURE(e.getMessage());
-		}
 	}
 
 	@PostMapping("/deposit")
-	public @ResponseBody ResponseStat deposit(@RequestBody OperationDto operationDto) {
-		try {
+	@ApiOperation(httpMethod = "POST", value = "Resource to perform the deposit operation")
+	@ApiResponse(code = 500, message = "An error occured while performing the action")
+	public @ResponseBody void deposit(@RequestBody OperationDto operationDto) throws OperationException {
 			accountService.deposit(operationDto);
-			return ResponseStat.SUCCESS;
-		} catch (OperationException e) {
-			e.printStackTrace();
-			return ResponseStat.FAILURE(e.getMessage());
-		}
 	}
 
 	@PostMapping("/transferamount")
-	public @ResponseBody ResponseStat transferAmount(@RequestBody TransactionDto transactionDto) {
-		try {
+	@ApiOperation(httpMethod = "POST", value = "Resource to perform the transfer operation")
+	@ApiResponse(code = 500, message = "An error occured while performing the action")
+	public @ResponseBody void transferAmount(@RequestBody TransactionDto transactionDto) throws OperationException, TransferException {
 			accountService.transferAmount(transactionDto);
-			return ResponseStat.SUCCESS;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseStat.FAILURE(e.getMessage());
-		}
 	}
 	
 	//TODO Change to get
 	@PostMapping("/filtertransaction")
-	public @ResponseBody List<Transaction> filterTransactionHistory(@RequestBody TransactionFilterDto transactionFilterDto){
-		return accountService.filterTransactionHistory(transactionFilterDto);
+	@ApiOperation(httpMethod = "POST", value = "Resource to filter transactions history of a bank account")
+	@ApiResponse(code = 500, message = "An error occured while performing the action")
+	public @ResponseBody ResponseEntity<List<Transaction>> filterTransactionHistory(@RequestBody TransactionFilterDto transactionFilterDto){
+		List<Transaction> transactions = accountService.filterTransactionHistory(transactionFilterDto);
+		return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
 	}
 
 }
