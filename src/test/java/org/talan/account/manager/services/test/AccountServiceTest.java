@@ -30,17 +30,13 @@ public class AccountServiceTest {
 
 	@Test
 	public void withdrawMustDoNothingGivenBalanceLowerThanAmount() {
-
 		assertThatThrownBy(() -> {
 			accountService.withdraw(new OperationDto(accountId, 1000F));
 		}).isInstanceOf(OperationException.class);
-
-		// assertEquals(100, account.getBalance());
 	}
 
 	@Test
 	public void withdrawMustDoNothingGivenNegativeAmount() throws Exception {
-
 		assertThatThrownBy(() -> {
 			accountService.withdraw(new OperationDto(accountId, -100F));
 		}).isInstanceOf(OperationException.class);
@@ -48,7 +44,6 @@ public class AccountServiceTest {
 
 	@Test
 	public void depositMustDoNothingGivenNegativeAmount() {
-
 		assertThatThrownBy(() -> {
 			accountService.deposit(new OperationDto(accountId, -100F));
 		}).isInstanceOf(OperationException.class);
@@ -56,13 +51,17 @@ public class AccountServiceTest {
 
 	@Test
 	public void withdrawMustReturnValidBalance() throws Exception {
+		// When
 		accountService.withdraw(new OperationDto(accountId, 60F));
+		// Then
 		assertThat(accountService.findAccount(accountId).getBalance()).isEqualTo(40F);
 	}
 
 	@Test
 	public void depositMustReturnValidBalance() throws OperationException {
+		// When
 		accountService.deposit(new OperationDto(accountId, 60F));
+		// Then
 		assertThat(accountService.findAccount(accountId).getBalance()).isEqualTo(160F);
 	}
 
@@ -82,24 +81,27 @@ public class AccountServiceTest {
 
 	@Test
 	public void transferAmountMustReturnValidBalances() throws Exception {
+		// When
 		accountService.transferAmount(new TransactionDto(accountId, 60F, accountId2));
-
+		// Then
 		assertThat(accountService.findAccount(accountId).getBalance()).isEqualTo(40F);
 		assertThat(accountService.findAccount(accountId2).getBalance()).isEqualTo(160F);
 	}
 
 	@Test
 	public void transactionHistoryMustReturnValidRecords() throws Exception {
+		// When
 		accountService.transferAmount(new TransactionDto(accountId, 60F, accountId2));
-		
+		// Then
 		assertThat(accountService.findAccount(accountId).getTransactionHistory()).isNotNull();
 		assertThat(accountService.findAccount(accountId).getTransactionHistory().size()).isEqualTo(1);
 	}
 
 	@Test
 	public void filterTransactionHistoryMustReturnValidRecords() throws Exception {
+		// When
 		accountService.transferAmount(new TransactionDto(accountId, 60F, accountId2));
-		
+		// Then
 		assertThat(accountService.filterTransactionHistory(new TransactionFilterDto(accountId, Directions.OUT))).isNotNull();
 		assertThat(accountService.filterTransactionHistory(new TransactionFilterDto(accountId, Directions.OUT)).size()).isEqualTo(1);
 		assertThat(accountService.filterTransactionHistory(new TransactionFilterDto(accountId, Directions.OUT)).get(0).getDirection()).isEqualTo(Directions.OUT.getCode());
